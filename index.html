@@ -1,0 +1,59 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <title>Potion Room Synth</title>
+    <link rel="stylesheet" href="style.css" />
+    <script src="script.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/tone/14.8.49/Tone.js"></script>
+  </head>
+  <body>
+    <!-- Start overlay (required for Tone.js to unlock audio) -->
+    <div id="start-overlay">
+      <h1>Welcome to the Synth Potion Room</h1>
+      <p>Click anywhere to begin the magic!</p>
+    </div>
+
+    <div id="potion-room">
+      <!-- Cauldron -->
+      <div id="cauldron"></div>
+      <!-- Potions -->
+      <div
+        class="potion"
+        id="potion-bass"
+        data-sound="bass"
+        draggable="true"
+      ></div>
+      <div
+        class="potion"
+        id="potion-pad"
+        data-sound="pad"
+        draggable="true"
+      ></div>
+      <div
+        class="potion"
+        id="potion-pluck"
+        data-sound="pluck"
+        draggable="true"
+      ></div>
+      <div
+        class="potion"
+        id="potion-bell"
+        data-sound="bell"
+        draggable="true"
+      ></div>
+      <div
+        class="potion"
+        id="potion-random"
+        data-sound="random"
+        draggable="true"
+      ></div>
+      <div
+        class="potion"
+        id="potion-reset"
+        data-sound="reset"
+        draggable="true"
+      ></div>
+    </div>
+  </body>
+</html>
