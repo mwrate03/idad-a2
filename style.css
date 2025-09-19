@@ -19,68 +19,71 @@ body {
   height: 90%;
   display: flex;
   flex-direction: column;
-  align-items: center; /* centers the cauldron horizontally */
+  align-items: center;
   justify-content: flex-end;
 }
 
 /* cauldron */
 #cauldron {
-  width: 250px;
-  height: 250px;
+  width: 20%;
+  max-width: 250px;
+  aspect-ratio: 1 / 1;
   background: url("cauldron.png") no-repeat center center / contain;
   cursor: pointer;
-  margin-bottom: 30px; /* sits visually on the table */
+  margin-bottom: 3%;
   z-index: 2;
 }
 
 /* potion bottles (base styling) */
 .potion {
-  width: 180px;
-  height: 180px;
-  position: absolute; /* lets you place them anywhere */
+  width: 12%;
+  max-width: 180px;
+  aspect-ratio: 1 / 1;
+  position: absolute;
   background-size: contain;
   background-repeat: no-repeat;
   background-position: center;
   cursor: grab;
 }
 
-/* example positions for potions */
+/* positions of potions (used percentages to keep the potions in the same area on different screens.) */
 #potion-bass {
   background-image: url("potion-bass.png");
-  top: 390px;
-  left: 20px; /* put it on the left shelf */
+  top: 65%;
+  left: 5%;
 }
 
 #potion-pad {
   background-image: url("potion-pad.png");
-  top: 195px;
-  right: 50px; /* put it on the right shelf */
+  top: 33%;
+  right: 7%;
 }
 
 #potion-pluck {
   background-image: url("potion-pluck.png");
-  top: 200px;
-  left: 1px;
+  top: 34%;
+  left: 2%;
 }
 
 #potion-random {
   background-image: url("potion-random.png");
-  top: 1px;
-  left: 70px;
+  top: 1%;
+  left: 8%;
 }
 
 #potion-reset {
   background-image: url("potion-reset.png");
-  top: 1px;
-  right: 70px;
+  top: 1%;
+  right: 8%;
 }
 
 #potion-bell {
   background-image: url("potion-bell.png");
-  top: 390px;
-  right: 70px;
+  top: 65%;
+  right: 8%;
 }
 
+/* overlay */
 #start-overlay {
   position: fixed;
   top: 0;
