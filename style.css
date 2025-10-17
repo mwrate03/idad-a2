@@ -4,7 +4,7 @@ body {
   padding: 0;
   height: 100vh;
   width: 100vw;
-  background: url("background.png") no-repeat center center / cover;
+  background: url("background-night.png") no-repeat center center / cover;
   display: flex;
   justify-content: center;
   align-items: flex-end;
@@ -14,7 +14,7 @@ body {
 
 /* potion room wrapper */
 #potion-room {
-  position: relative;
+  position: relative; /* so cauldron and potions are positioned inside it */
   width: 100%;
   height: 100vh;
   max-width: 1400px;
@@ -22,17 +22,42 @@ body {
   flex-direction: column;
   align-items: center;
   justify-content: flex-end;
+  overflow: hidden; /* ensures nothing scrolls outside */
 }
 
 /* cauldron */
 #cauldron {
-  width: 20%;
-  max-width: 250px;
+  position: absolute; /* keeps it from pushing layout */
+  bottom: -20%; /* move it slightly below the screen */
+  width: 40%;
+  max-width: 850px;
   aspect-ratio: 1 / 1;
   background: url("cauldron.png") no-repeat center center / contain;
+  z-index: 1;
+  overflow: hidden; 
+}
+/* The round button in the center of the cauldron */
+#playPauseBtn {
+  position: absolute;
+  bottom: 30px;       /* adjust to sit nicely on cauldron */
+  left: 49%;          /* roughly center it */
+  transform: translateX(-50%);
+  background: none;
+  border: none;
   cursor: pointer;
-  margin-bottom: 3%;
-  z-index: 2;
+  z-index: 10;        /* above the cauldron */
+}
+
+#playPauseBtn img {
+  width: 80px;        /* adjust size of icon */
+  height: 80px;
+  object-fit: contain;
+  transition: transform 0.2s ease;
+}
+
+#playPauseBtn:hover img {
+  transform: scale(1.1); /* small hover effect */
+  filter: drop-shadow(0 0 20px #13c20de6);
 }
 
 /* potion bottles (base styling) */
@@ -45,6 +70,12 @@ body {
   background-repeat: no-repeat;
   background-position: center;
   cursor: grab;
+  transition: transform 0.2s ease, filter 0.3s ease;
+  filter: drop-shadow(0 0 8px rgba(255, 255, 255, 0.5));
+}
+.potion:hover {
+  transform: scale(1.05);
+  filter: drop-shadow(0 0 20px rgba(255, 220, 150, 0.9));
 }
 
 /* positions of potions (used percentages to keep the potions in the same area on different screens.) */
@@ -63,19 +94,19 @@ body {
 #potion-pluck {
   background-image: url("potion-pluck.png");
   top: 35%;
-  left: 2%;
+  left: 3%;
 }
 
 #potion-random {
   background-image: url("potion-random.png");
-  top: 9%;
-  left: 2%;
+  top: 35%;
+  left: -3%;
 }
 
 #potion-reset {
   background-image: url("potion-reset.png");
-  top: 9%;
-  right: 2%;
+  top: 35%;
+  right: -2%;
 }
 
 #potion-bell {

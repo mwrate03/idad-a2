@@ -1,131 +1,145 @@
 document.addEventListener("DOMContentLoaded", () => {
-  // elements from the HTML
-  const overlay = document.getElementById("start-overlay"); // the "click to start" screen
-  const potions = document.querySelectorAll(".potion"); // all potion bottles
-  const cauldron = document.getElementById("cauldron"); // the cauldron in the middle
+  // Day/Night Background
+  const body = document.body;
+  const hour = new Date().getHours();
+
+  if (hour >= 6 && hour < 18) {
+    body.style.backgroundImage = "url('background-day.png')";
+  } else {
+    body.style.backgroundImage = "url('background-night.png')";
+  }
+
+  body.style.backgroundRepeat = "no-repeat";
+  body.style.backgroundPosition = "center center";
+  body.style.backgroundSize = "cover";
+
+  // Elements from the HTML
+  const overlay = document.getElementById("start-overlay");
+  const potions = document.querySelectorAll(".potion");
+  const cauldron = document.getElementById("cauldron");
+  const playButton = document.getElementById("playPauseBtn");
+  const icon = document.getElementById("icon");
 
   // Tone.js Synths
   const synths = {
     bass: new Tone.MembraneSynth().toDestination(),
     pad: new Tone.PolySynth(Tone.Synth).toDestination(),
-    pluck: new Tone.PluckSynth().toDestination(),
-    bell: new Tone.MetalSynth().toDestination(),
+    pluck: new Tone.PolySynth(Tone.Synth, {
+      oscillator: { type: "sawtooth", count: 3, spread: 30 },
+      // Fat oscillator effect instead of the pluck synth as it was too annoying
+    }).toDestination(),
+    bell: new Tone.PolySynth(Tone.MetalSynth).toDestination(),
+    // Realised for MetalSynth I need to put it within a PolySynth,
+    // so that the melody doesn't glitch and play one constant note
+    //
   };
 
-  // default melody setup 
-  // will play these notes in order (default melody)
   let melody = ["C4", "Eb4", "F4", "G4"];
-
-  // keep track of which synths are active (chosen by dropping potions)
   let activeSynths = [];
-
-  // a loop that plays the melody (will start when cauldron is clicked)
   let melodyLoop = null;
+  let isPlaying = false;
 
-  // enabling audio 
-  // browsers need a click to allow sound to be played
+  // Enable Audio
   overlay.addEventListener("click", async () => {
-    await Tone.start(); // start Tone.js
-    overlay.style.display = "none"; // hide overlay
+    await Tone.start();
+    overlay.style.display = "none";
   });
 
-  // --- drag potions onto the cauldron function ---
+  // Drag & Drop Potions
   potions.forEach((potion) => {
-    // when dragging starts, remember which potion type it is
     potion.addEventListener("dragstart", (event) => {
       event.dataTransfer.setData("text/plain", potion.dataset.sound);
     });
   });
 
-  // allow potions to be dropped onto cauldron
   cauldron.addEventListener("dragover", (event) => event.preventDefault());
-
   cauldron.addEventListener("drop", (event) => {
     event.preventDefault();
     const potionType = event.dataTransfer.getData("text/plain");
     addPotion(potionType);
   });
 
-  // clicking the cauldron to play / stop melody
-  cauldron.addEventListener("click", () => {
-    if (melodyLoop) {
-      // if it’s already playing, stop everything
-      melodyLoop.stop();
-      Tone.Transport.stop();
-      melodyLoop = null;
+  // Play/Pause Button
+  playButton.addEventListener("click", () => {
+    if (isPlaying) {
+      stopMelody();
+      icon.src = "play-icon.png";
+      isPlaying = false;
     } else {
-      // otherwise start playing melody
       playMelody();
+      icon.src = "pause-icon.png";
+      isPlaying = true;
     }
   });
 
-  // --- Add potion effect ---
+  // Add Potion Effects to Cauldron
   function addPotion(type) {
     if (type === "random") {
-      // this potion randomises the melody
-      melody = generateRandomMelody();
+      // Randomly choose notes
+      melody = [];
+      for (let i = 0; i < 5; i++) {
+        melody.push(generateRandomNote());
+      }
     } else if (type === "reset") {
-      // this potion resets everything
       resetCauldron();
     } else {
-      // otherwise, add the synth sound if not added yet
-      if (!activeSynths.includes(type)) {
-        activeSynths.push(type);
-      }
+      if (!activeSynths.includes(type)) activeSynths.push(type);
     }
   }
 
-  // --- play the melody ---
+  // Play Melody
   function playMelody() {
-    let index = 0; // which note to play first
-
-    // loop plays notes one by one every quarter note ("4n")
+    let index = 0;
     melodyLoop = new Tone.Loop((time) => {
-      const note = melody[index % melody.length]; // pick note in sequence
-
-      // play that note on every active synth
+      const note = melody[index % melody.length];
       activeSynths.forEach((type) => {
         const synth = synths[type];
-        if (synth) {
-          synth.triggerAttackRelease(note, "8n", time);
-        }
+        if (synth) synth.triggerAttackRelease(note, "8n", time);
       });
-
-      index++; // move to next note
+      index++;
     }, "4n");
 
-    // start the loop and the transport for sound
     melodyLoop.start(0);
     Tone.Transport.start();
   }
 
-  // random melody generator
-  function generateRandomMelody() {
-    const newMelody = [];
-    const octaves = [3, 4, 5]; // low, middle, high range
-    const noteNames = ["C", "C#", "D", "D#", "E", "F", "F#", "G", "G#", "A", "A#", "B"];
-
-    // pick 8 random notes
-    for (let i = 0; i < 5; i++) {
-      const note = noteNames[Math.floor(Math.random() * noteNames.length)];
-      const octave = octaves[Math.floor(Math.random() * octaves.length)];
-      newMelody.push(note + octave); // combine e.g. "C" + 4 → "C4"
-    }
-
-    return newMelody;
-  }
-
-  // reset cauldron function
-  function resetCauldron() {
-    // stop melody if it’s playing
+  // Stop melody
+  function stopMelody() {
     if (melodyLoop) {
       melodyLoop.stop();
       Tone.Transport.stop();
       melodyLoop = null;
     }
+  }
 
-    // clear everything back to default
+  // Random note generator
+  function generateRandomNote() {
+    const octaves = [4, 5];
+    const notes = [
+      "C",
+      "C#",
+      "D",
+      "D#",
+      "E",
+      "F",
+      "F#",
+      "G",
+      "G#",
+      "A",
+      "A#",
+      "B",
+    ]; // Keeping notes within the chromatic scale
+    const note = notes[Math.floor(Math.random() * notes.length)];
+    const octave = octaves[Math.floor(Math.random() * octaves.length)];
+    return note + octave;
+  }
+
+  // Reset Cauldron function
+  function resetCauldron() {
+    stopMelody();
     activeSynths = [];
     melody = ["C4", "Eb4", "F4", "G4"];
+    icon.src = "play-icon.png";
+    isPlaying = false;
   }
 });

@@ -8,7 +8,7 @@
     <script src="https://cdnjs.cloudflare.com/ajax/libs/tone/14.8.49/Tone.js"></script>
   </head>
   <body>
-    <!-- Start overlay (required for Tone.js to unlock audio) -->
+    <!-- Start overlay -->
     <div id="start-overlay">
       <h1>Welcome to the Synth Potion Room</h1>
       <p>Click anywhere to begin the magic!</p>
@@ -17,6 +17,10 @@
     <div id="potion-room">
       <!-- Cauldron -->
       <div id="cauldron"></div>
+      <!-- Play button on top of cauldron -->
+<button id="playPauseBtn">
+  <img id="icon" src="play-icon.png" alt="Play Button">
+</button>
       <!-- Potions -->
       <div
         class="potion"
