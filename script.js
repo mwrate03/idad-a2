@@ -30,8 +30,7 @@ document.addEventListener("DOMContentLoaded", () => {
     }).toDestination(),
     bell: new Tone.PolySynth(Tone.MetalSynth).toDestination(),
     // Realised for MetalSynth I need to put it within a PolySynth,
-    // so that the melody doesn't glitch and play one constant note
-    //
+    // so that the melody doesn't glitch and play one constant note.
   };
 
   let melody = ["C4", "Eb4", "F4", "G4"];
@@ -56,6 +55,30 @@ document.addEventListener("DOMContentLoaded", () => {
   cauldron.addEventListener("drop", (event) => {
     event.preventDefault();
     const potionType = event.dataTransfer.getData("text/plain");
+    addPotion(potionType);
+
+    // Find the potion element that matches the dropped one
+    const draggedPotion = document.querySelector(
+      `[data-sound="${potionType}"]`
+    );
+
+    // Add pour animation
+    if (draggedPotion) {
+      draggedPotion.classList.remove("pouring");
+
+      void draggedPotion.offsetWidth;
+      draggedPotion.classList.add("pouring");
+
+      // Remove the class after animation ends
+      setTimeout(() => draggedPotion.classList.remove("pouring"), 800);
+    }
+
+    //  Cauldron reaction animation
+    cauldron.classList.remove("cauldron-react");
+    void cauldron.offsetWidth;
+    cauldron.classList.add("cauldron-react");
+    setTimeout(() => cauldron.classList.remove("cauldron-react"), 1000);
+
     addPotion(potionType);
   });
 

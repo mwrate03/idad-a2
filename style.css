@@ -27,29 +27,29 @@ body {
 
 /* cauldron */
 #cauldron {
-  position: absolute; /* keeps it from pushing layout */
+  position: absolute; 
   bottom: -20%; /* move it slightly below the screen */
   width: 40%;
   max-width: 850px;
   aspect-ratio: 1 / 1;
   background: url("cauldron.png") no-repeat center center / contain;
   z-index: 1;
-  overflow: hidden; 
+  overflow: hidden;
 }
-/* The round button in the center of the cauldron */
+/* button in the center of the cauldron */
 #playPauseBtn {
   position: absolute;
-  bottom: 30px;       /* adjust to sit nicely on cauldron */
-  left: 49%;          /* roughly center it */
+  bottom: 30px; /* adjust to sit nicely on cauldron */
+  left: 49%; /* roughly centering it */
   transform: translateX(-50%);
   background: none;
   border: none;
   cursor: pointer;
-  z-index: 10;        /* above the cauldron */
+  z-index: 3; /* so it's above the cauldron */
 }
 
 #playPauseBtn img {
-  width: 80px;        /* adjust size of icon */
+  width: 80px; /* adjust size of icon */
   height: 80px;
   object-fit: contain;
   transition: transform 0.2s ease;
@@ -131,4 +131,41 @@ body {
   font-size: 1.5rem;
   z-index: 9999;
   cursor: pointer;
+}
+
+/* potion pour animation */
+@keyframes pourPotion {
+  0% {
+    transform: rotate(0deg) scale(1);
+  }
+  50% {
+    transform: rotate(-45deg) scale(1.1);
+  }
+  100% {
+    transform: rotate(0deg) scale(1);
+  }
+}
+
+.pouring {
+  animation: pourPotion 0.8s ease forwards;
+}
+
+/* cauldron reaction */
+@keyframes bubbleCauldron {
+  0% {
+    filter: drop-shadow(0 0 0px #00ff88);
+    transform: scale(1);
+  }
+  50% {
+    filter: drop-shadow(0 0 20px #00ff88);
+    transform: scale(1.05);
+  }
+  100% {
+    filter: drop-shadow(0 0 0px #00ff88);
+    transform: scale(1);
+  }
+}
+
+.cauldron-react {
+  animation: bubbleCauldron 1s ease; 
 }
